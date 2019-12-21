@@ -9,12 +9,13 @@ def doubleDigit(num):
     else:
         return str(num)
 
+    
 class DataLoader:
     
     def __init__(self, c_id) :
         self.c_id = c_id 
 
-    def scrapChattingLog(self, v_id, isSaveFile = False):
+    def scrapChatLog(self, v_id, isSaveFile = False):
         
         if sys.version_info[0] == 2:
             reload(sys)
@@ -66,18 +67,27 @@ class DataLoader:
                 user = j["comments"][k]["commenter"]["display_name"]
                 chat = j["comments"][k]["message"]["body"]
                 
-                if isSaveFile : 
-                    f.write('[')
-                    f.write(str(time))
-                    f.write(']')
-                    f.write(' ')
-                    f.write('<')
-                    f.write(str(user))
-                    f.write('>')
-                    f.write(' ')
-                    f.write(str(chat))
-                    f.write("\n")
+                try:
+                    time = str(time)
+                    user = str(user)
+                    chat = str(chat)
+                
+                    if isSaveFile : 
+                        f.write('[')
+                        f.write(time)
+                        f.write(']')
+                        f.write(' ')
+                        f.write('<')
+                        f.write(user)
+                        f.write('>')
+                        f.write(' ')
+                        f.write(chat)
+                        f.write("\n")
 
+                except UnicodeEncodeError:
+                    pass
+
+                
             if '_next' not in j:
                 break
             
@@ -85,8 +95,7 @@ class DataLoader:
                 
         f.close()
     
-    
 if __name__ == "__main__":
     dataloader = DataLoader(sys.argv[2])
-    dataloader.scrapChattingLog(sys.argv[1], True)
+    dataloader.scrapChatLog(sys.argv[1], True)
     
